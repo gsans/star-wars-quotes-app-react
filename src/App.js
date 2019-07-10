@@ -1,26 +1,65 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import { Provider, createClient } from 'urql';
+import { Query } from "urql";
+
+const client = createClient({
+  url: 'http://localhost:4000/graphql',
+});
+
+const AppWithProvider = () => (
+  <Provider value={client}>
+    <App/>
+  </Provider>
+ );
+
+const listQuotes = `
+  query listQuotes {
+    quotes {
+      id from body
+    }
+  }
+`;
+
+function QuotesList() {
+  return (
+    <div>
+       <div className="card-container">
+         <Query query={listQuotes}>
+           {({ fetching, data, error }) => {
+             if (fetching) {
+               return "Loading...";
+             } else if (error) {
+               return "Error loading quotes";
+             }
+ 
+             return (
+               <>
+                 {data.quotes.map((c) => (
+                   <div className="card" key={c.id}>
+                    <div className="id">Quote #{c.id}</div>
+                     <div className="body">{c.body}</div>
+                     <div className="author">{c.from}</div>
+                   </div>
+                 ))}
+               </>
+             );
+           }}
+         </Query>
+       </div>
+     </div>
+  );
+ };
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="app-body">
+        <QuotesList/>
+      </div>
     </div>
   );
 }
 
-export default App;
+export default AppWithProvider;
