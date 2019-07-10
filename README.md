@@ -1,3 +1,7 @@
+### Apollo Server 2.0
+
+Follow the instructions [here](https://github.com/gsans/starwars-quotes-graphql-server) to run the GraphQL Apollo server that goes with this client.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
